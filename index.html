@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projeto ADEGA</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300&family=Sedgwick+Ave+Display&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <!-- Botões para abrir os modais -->
+        <button class="widget-button1" onclick="openModalCadastrar()"
+            style="font-family: 'Sedgwick-Ave-Display', cursive;">Cadastrar produto</button>
+        <button class="widget-button1" onclick="openModalDeletar()"
+            style="font-family: 'Sedgwick-Ave-Display', cursive;">Deletar produto</button>
+        <button class="widget-button1" onclick="openModalPesquisar()"
+            style="font-family: 'Sedgwick-Ave-Display', cursive;">Filtrar produto</button>
+            <button class="widget-button1" onclick="exportarRelatorio()"
+                style="font-family: 'Sedgwick-Ave-Display', cursive;">Exportar Relatório</button>
+
+        <h1 style="font-family: 'Sedgwick-Ave-Display', cursive;">Lista de Produtos</h1>
+        <!-- Tabela para listar os produtos -->
+        <table id="product-table">
+            <thead>
+                <tr>
+                    <th style="font-family: 'Merriweather', sans-serif">Id</th>
+                    <th style="font-family: 'Merriweather', sans-serif">Nome</th>
+                    <th style="font-family: 'Merriweather', sans-serif">Valor</th>
+                    <th style="font-family: 'Merriweather', sans-serif">Quantidade</th>
+                    <th style="font-family: 'Merriweather', sans-serif">Categoria</th>
+                    <th style="font-family: 'Merriweather', sans-serif">Descrição</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Os dados serão preenchidos nessa tag -->
+            </tbody>
+        </table>
+        <h6 style="font-family: 'Merriweather', sans-serif">**Lista dos 10 produtos de maior valor no estoque**</h6>
+    </div>
+
+    <div id="overlay" class="overlay" style="display: none;"></div>
+
+    <!-- Modal para preenchimento de informações -->
+    <div id="product-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <h2 style="font-family: 'Sedgwick-Ave-Display', cursive;">Cadastrar Produto</h2>
+            <!-- Campos de preenchimento -->
+            <span class="error" id="nome_produto_error"></span>
+            <div class="form-group">
+                <label for="nome_produto" style="font-family: 'Merriweather', sans-serif">Nome do Produto:</label>
+                <input type="text" id="nome_produto" required>
+            </div>
+
+            <span class="error" id="valor_error"></span>
+            <div class="form-group">
+                <label for="valor" style="font-family: 'Merriweather', sans-serif">Valor:</label>
+                <input type="text" id="valor" required>
+            </div>
+
+            <span class="error" id="quantidade_error"></span>
+            <div class="form-group">
+                <label for="quantidade" style="font-family: 'Merriweather', sans-serif">Quantidade:</label>
+                <input type="number" id="quantidade" required>
+            </div>
+
+            <span class="error" id="categoria_error"></span>
+            <div class="form-group">
+                <label for="categoria" style="font-family: 'Merriweather', sans-serif">Categoria:</label>
+                <input type="text" id="categoria" required>
+            </div>
+
+            <span class="error" id="descricao_error"></span>
+            <div class="form-group">
+                <label for="descricao" style="font-family: 'Merriweather', sans-serif">Descrição:</label>
+                <textarea id="descricao"></textarea>
+            </div>
+
+            <!-- Botões do modal -->
+            <button class="widget-button2" onclick="confirmarCadastro()"
+                style="font-family: 'Merriweather', sans-serif">Salvar</button>
+            <button class="widget-button2" onclick="fecharModalCadastrar()"
+                style="font-family: 'Merriweather', sans-serif">Fechar</button>
+        </div>
+    </div>
+
+    <div id="delete-modal" class="modal" style="display: none;">
+        <div class="modal-content delete-modal-content">
+            <h2 style="font-family: 'Sedgwick-Ave-Display', cursive;">Deletar Produto</h2>
+            <!-- Campos de preenchimento -->
+            <span class="error" id="delete_password_error"></span>
+            <div class="form-group">
+                <label for="delete_password" style="font-family: 'Merriweather', sans-serif">Senha do produto:</label>
+                <input type="text" id="delete_password" required>
+            </div>
+            <span class="error" id="delete_nome_error"></span>
+            <div class="form-group">
+                <label for="delete_nome" style="font-family: 'Merriweather', sans-serif">Nome do Produto:</label>
+                <input type="text" id="delete_nome" required>
+            </div>
+            <!-- Botões do modal -->
+            <button class="widget-button2" id="confirme-delete-btn" onclick="confirmarDelecao()">Sim</button>
+            <button class="widget-button2" id="close-delete-modal" onclick="fecharModalDeletar()">Não</button>
+        </div>
+    </div>
+
+    <div id="pesquisa-modal" class="modal" style="display: none;">
+        <div class="modal-content pesquisa-modal-content">
+            <h2 style="font-family: 'Sedgwick-Ave-Display', cursive;">Pesquisar Produto</h2>
+            <!-- Campos de preenchimento -->
+            <span class="error" id="pesquisa_password_error"></span>
+            <div class="form-group">
+                <label for="pesquisa_password" style="font-family: 'Merriweather', sans-serif">Senha do produto:</label>
+                <input type="text" id="pesquisa_password" required>
+            </div>
+            <span class="error" id="pesquisa_nome_error"></span>
+            <div class="form-group">
+                <label for="pesquisa_nome" style="font-family: 'Merriweather', sans-serif">Nome do Produto:</label>
+                <input type="text" id="pesquisa_nome" required>
+            </div>
+            <!-- Botões do modal -->
+            <button class="widget-button2" id="confirme-pesquisa-btn" onclick="confirmarPesquisa()">Sim</button>
+            <button class="widget-button2" id="close-pesquisa-modal" onclick="fecharModalPesquisa()">Não</button>
+        </div>
+    </div>
+
+    <div id="informations-product-modal" class="modal informations-modal" style="display: none;">
+        <div class="modal-content product-informations-modal-content">
+            <button id="fechar-modal" class="close-button" onclick="fecharModalInformacoesProduto()">&times;</button>
+            <p class="modal-title">Informações do Produto</p>
+            <div class="product-info-item">
+                <strong>Nome:</strong>
+                <span id="informations-product-nome"></span>
+            </div>
+            <div class="product-info-item">
+                <strong>Valor:</strong>
+                <span id="informations-product-valor"></span>
+            </div>
+            <div class="product-info-item">
+                <strong>Quantidade:</strong>
+                <span id="informations-product-quantidade"></span>
+            </div>
+            <div class="product-info-item">
+                <strong>Categoria:</strong>
+                <span id="informations-product-categoria"></span>
+            </div>
+            <div class="product-info-item">
+                <strong>Descrição:</strong>
+                <span id="informations-product-descricao"></span>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
